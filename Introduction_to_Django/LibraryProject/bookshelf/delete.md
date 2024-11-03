@@ -2,7 +2,7 @@
 
 **Command**:
 ```python
-book.delete()
+book.objects.delete()
 
 books = Book.objects.all()
 print(books)  # Should return an empty queryset
