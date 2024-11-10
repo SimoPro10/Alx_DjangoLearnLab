@@ -10,23 +10,24 @@ from django.contrib.auth.views import LogoutView
 from django.urls import path
 from django.contrib.auth.decorators import user_passes_test
 from .models import UserProfile
-from .forms import BookForm
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import permission_required
 
 
 
 def book_list(request):
      
       books = Book.objects.all() 
-      context = {'books': books}  
-      return render(request, 'relationship_app/book_list.html', context)
+      
+      return render(request, "relationship_app/book_list.html", {'books': books})
 
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = 'relationship_app/library_detail.html'
-    context_object_name = 'library'
-    
+    template_name = 'library_detail.html' 
+    context_object_name = 'library'  
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+      
+        context['books'] = self.object.books.all()
  
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -52,26 +53,27 @@ urlpatterns = [
 
 
 
-def is_admin(user):
-    return user.userprofile.role == 'admin'
+def user_is_admin(user):
+    return user.profile.is_admin()
 
-def is_librarian(user):
-    return user.userprofile.role == 'librarian'
+def user_is_librarian(user):
+    return user.profile.is_librarian()
 
-def is_member(user):
-    return user.userprofile.role == 'member'
+def user_is_member(user):
+    return user.profile.is_member()
 
-
-@user_passes_test(is_admin)
+# Admin view - accessible only by Admin users
+@user_passes_test(user_is_admin)
 def admin_view(request):
     return render(request, 'admin_view.html')
 
-@user_passes_test(is_librarian)
+# Librarian view - accessible only by Librarians
+@user_passes_test(user_is_librarian)
 def librarian_view(request):
     return render(request, 'librarian_view.html')
 
-
-@user_passes_test(is_member)
+# Member view - accessible only by Members
+@user_passes_test(user_is_member)
 def member_view(request):
     return render(request, 'member_view.html')
 
