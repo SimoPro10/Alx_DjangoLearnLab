@@ -10,6 +10,7 @@ from django.contrib.auth.views import LogoutView
 from django.urls import path
 from django.contrib.auth.decorators import user_passes_test
 from .models import UserProfile
+from django.contrib.auth.decorators import permission_required
 
 
 
