@@ -19,6 +19,7 @@ from django.urls import path
 from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import views as auth_views
+from relationship_app import views 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
