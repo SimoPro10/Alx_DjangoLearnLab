@@ -2,7 +2,7 @@
 URL configuration for LibraryProject project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
+    https://docs.djangoproject.com/en/5.0/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -15,33 +15,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from . import views
-from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth import views as auth_views
-from relationship_app import views 
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('books/', views.book_list, name='book_list'),
-    path('library/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
-    path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
-    path('register/', views.register, name='register'),
-     path('admin/', views.admin_view, name='admin_view'),
-    path('librarian/', views.librarian_view, name='librarian_view'),
-    path('member/', views.member_view, name='member_view'),
-    path('book/add/', views.add_book, name='add_book'),
-    path('book/<int:book_id>/edit/', views.edit_book, name='edit_book'),
-    path('book/<int:book_id>/delete/', views.delete_book, name='delete_book'),
-    path('books/', views.book_list, name='book_list'),  
-    path('library/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
-    path('register/', views.register, name='register'),
-    
-    path('login/', auth_views.LoginView.as_view(), name='login'),
-     path('books/add/', views.add_book, name='add_book'),
-    path('books/<int:book_id>/edit/', views.edit_book, name='edit_book'),
-    path('books/<int:book_id>/delete/', views.delete_book, name='delete_book'),
- 
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path("relationship_app/", include("relationship_app.urls")),
+
 ]

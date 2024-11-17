@@ -1,8 +1,3 @@
-## Retrieve Operation
-
-**Command**:
-```python
-books = Book.objects.all()
-Book.objects.get()
-for b in books:
-    print(b.title, b.author, "1984")
+# Retrieving all books
+from bookshelf.models import Book
+books = Book.objects.get(title='1984')
