@@ -17,7 +17,6 @@ class Book(models.Model):
     def __str__(self):
         return f"{self.title} by {self.author}"  
 
-#Extending Book Model with Custom Permissions
     class Meta(models.Model):
         Permissions_Choices =(
             ('can_add_book', 'can_add_book'),
