@@ -1,0 +1,21 @@
+i<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Home</title>
+</head>
+<body>
+    <h1>Blog Home</h1>
+    <ul>
+        {% for post in posts %}
+            <li>
+                <a href="#">{{ post.title }}</a>
+                <p>{{ post.content|slice:":100" }}...</p>  <!-- Display the first 100 characters -->
+            </li>
+        {% empty %}
+            <li>No posts yet!</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
