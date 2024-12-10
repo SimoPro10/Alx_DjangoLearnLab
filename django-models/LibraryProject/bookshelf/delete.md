@@ -34,8 +34,7 @@ title: Think and grow rich
 author: Someone
 publication_year: 1997]
 =======
-# Delete book
 from bookshelf.models import Book
-book = Book.objects.get(title='Nineteen Eighty-Four')
+book = Book.objects.get(title="1984")
 book.delete()
 >>>>>>> 16dee7aeb905a470e30d02d3bea5cea76272bc25

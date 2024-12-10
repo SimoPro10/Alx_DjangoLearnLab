@@ -22,4 +22,7 @@ class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
     publication_year = models.IntegerField()
+
+    def __str__(self):
+        return self.title
 >>>>>>> 16dee7aeb905a470e30d02d3bea5cea76272bc25

@@ -15,7 +15,7 @@ author: George Orwell
 publication_year: 1949
 `
 =======
-# Retrieving all books
-from bookshelf.models import Book
-books = Book.objects.get(title='1984')
+books = Book.objects.get(title="1984")
+for book in books:
+    print(book.title, book.author, book.publication_year)
 >>>>>>> 16dee7aeb905a470e30d02d3bea5cea76272bc25

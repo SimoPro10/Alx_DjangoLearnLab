@@ -16,9 +16,6 @@ author: George Orwell
 publication_year: 1949
 `
 =======
-# Update books
-from bookshelf.models import Book
-book = Book.objects.get(title='1984')
-book.title="Nineteen Eighty-Four"
+book.title = "Nineteen Eighty-Four"
 book.save()
 >>>>>>> 16dee7aeb905a470e30d02d3bea5cea76272bc25
