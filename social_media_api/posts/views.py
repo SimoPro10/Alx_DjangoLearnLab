@@ -10,6 +10,8 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from notifications.utils import create_notification
+from rest_framework import status,generics
+from django.contrib.contenttypes.models import ContentType
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -47,19 +49,46 @@ class FeedView(APIView):
 
 
 @login_required
-def like_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    like, created = Like.objects.get_or_create(post=post, user=request.user)
-    if created:
-        create_notification(recipient=post.author, actor=request.user, verb='liked', target=post)
-        return JsonResponse({'message': 'Post liked successfully'}, status=201)
-    return JsonResponse({'message': 'You have already liked this post'}, status=400)
+class LikePostView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def post(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        
+        if not created:
+            return Response({"error": "You already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create a notification for the post owner
+        notification = Notification.objects.create(
+            recipient=post.author,
+            actor=request.user,
+            verb="liked your post",
+            target_content_type=ContentType.objects.get_for_model(Post),
+            target_object_id=post.id,
+            target=post
+        )
+
+        return Response({"message": "Post liked successfully"}, status=status.HTTP_200_OK)
 @login_required
-def unlike_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    like = Like.objects.filter(post=post, user=request.user).first()
-    if like:
-        like.delete()
-        return JsonResponse({'message': 'Post unliked successfully'}, status=200)
-    return JsonResponse({'message': 'You have not liked this post'}, status=400)
+class UnlikePostView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)
+        try:
+            like = Like.objects.get(user=request.user, post=post)
+            like.delete()
+            return Response({"message": "Post unliked successfully"}, status=status.HTTP_200_OK)
+        except Like.DoesNotExist:
+            return Response({"error": "You haven't liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FeedView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        followed_users = request.user.following.all()  # Get users that the current user is following
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')  # Get posts from followed users, ordered by creation date
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
