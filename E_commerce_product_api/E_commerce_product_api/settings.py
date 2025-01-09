@@ -29,9 +29,9 @@ ALLOWED_HOSTS = ['*']
 SECRET_KEY = 'django-insecure-nfo*7e6e9125g4aa438ztk*p#s+7tqj)h1im1op7b&+s+xs7&a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['SimoPro10.pythonanywhere.com']
 
 
 # Application definition
